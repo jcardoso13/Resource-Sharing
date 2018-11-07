@@ -6,16 +6,15 @@ entity datapath_unit is
 port(
 	clk: in std_logic;
 	rst: in std_logic;
-	sel_op: in std_logic;
+	seq: in std_logic;
 	
-	sel_op1,sel_op2,sel_op3,sel_op4,sel_op5,
-	sel_op6: in std_logic_vector(2 downto 0);
+	sel_reg1,sel_reg2,sel_reg3,sel_reg4,sel_reg5,
+	sel_reg6: in std_logic_vector(2 downto 0);
 	
 	sel_out1,sel_out2,sel_out3,
 	sel_out4: in std_logic_vector(1 downto 0);
 	
 	load: in std_logic_vector(3 downto 0);
-	seq: in std_logic;
 	sel_add: in std_logic_vector(1 downto 0);
 	trunc: in std_logic_vector(1 downto 0);
 	reg_input1,reg_input2,
@@ -29,7 +28,7 @@ end datapath_unit;
 architecture Behavioral of datapath_unit is
 
 component adder
-port (
+port(
 A: in signed(9 downto 0);
 B: in signed(9 downto 0);
 C: out signed(9 downto 0);
@@ -40,7 +39,7 @@ end component;
 
 
 component mult
-port (
+port(
 A: in signed(9 downto 0);
 B: in signed(9 downto 0);
 C: out signed(9 downto 0)
@@ -48,36 +47,40 @@ C: out signed(9 downto 0)
 end component;
 
 --SIGNALS
-reg1,reg2,reg3,reg4: signed(9 downto 0);
-mux_output_adder1A,mux_output_adder1B,mux_output_adder2A,
-mux_output_adder2B:signed(9 downto 0);
+signal reg1, reg2, reg3, reg4: signed(9 downto 0);
+signal mux_output_adder1A,mux_output_adder1B,mux_output_adder2A,
+mux_output_adder2B: signed(9 downto 0);
+signal seq_input :signed(9 downto 0);
+signal mux_output_multA,mux_output_multB:signed(9 downto 0);
+signal adder1_output,adder2_output,mult_output:signed(9 downto 0);
+signal mux_reg1,mux_reg2,mux_reg3,mux_reg4:signed(9 downto 0);
 
 begin
 
 
 inst_adder1: adder port map(
 A => mux_output_adder1A,
-B => mux_outputadder1B,
+B => mux_output_adder1B,
 C => adder1_output,
 sel_add => sel_add(0),
 trunc => trunc(0)
 );
 
 inst_adder2: adder port map(
-A => seq,
+A => seq_input,
 B => mux_output_adder2B,
-C => adder2_output
+C => adder2_output,
 sel_add => sel_add(1),
 trunc => trunc(1)
 );
 
 inst_mult: mult port map(
 A => mux_output_multA,
-B => mux_output6_multB,
+B => mux_output_multB,
 C => mult_output);
 
 
-seq <= mux_output_adder2A when seq='0' else adder1_output;
+seq_input<= mux_output_adder2A when seq='0' else adder1_output;
 
 
 mux_output_adder1A <= reg1 when sel_reg1="000" else reg2 when sel_reg2="001" else
@@ -86,19 +89,19 @@ sel_reg1="100" else reg_input2 when sel_reg1="101" else reg_input3 when
 sel_reg1="110" else reg_input4;
 
 mux_output_adder1B <= reg1 when sel_reg2="000" else reg2 when sel_reg2="001" else
-reg3 when sel_reg1="010" else reg4 when sel_reg1="011" else reg_input1 when
-sel_reg1="100" else reg_input2 when sel_reg1="101" else reg_input3 when 
-sel_reg1="110" else reg_input4;
+reg3 when sel_reg2="010" else reg4 when sel_reg2="011" else reg_input1 when
+sel_reg2="100" else reg_input2 when sel_reg2="101" else reg_input3 when 
+sel_reg2="110" else reg_input4;
 
 mux_output_adder2A <= reg1 when sel_reg3="000" else reg2 when sel_reg2="001" else
-reg3 when sel_reg1="010" else reg4 when sel_reg1="011" else reg_input1 when
-sel_reg1="100" else reg_input2 when sel_reg1="101" else reg_input3 when 
-sel_reg1="110" else reg_input4;
+reg3 when sel_reg3="010" else reg4 when sel_reg3="011" else reg_input1 when
+sel_reg3="100" else reg_input2 when sel_reg3="101" else reg_input3 when 
+sel_reg3="110" else reg_input4;
 
 mux_output_adder2B <= reg1 when sel_reg4="000" else reg2 when sel_reg2="001" else
-reg3 when sel_reg1="010" else reg4 when sel_reg1="011" else reg_input1 when
-sel_reg1="100" else reg_input2 when sel_reg1="101" else reg_input3 when 
-sel_reg1="110" else reg_input4;
+reg3 when sel_reg4="010" else reg4 when sel_reg4="011" else reg_input1 when
+sel_reg4="100" else reg_input2 when sel_reg4="101" else reg_input3 when 
+sel_reg4="110" else reg_input4;
 
 mux_output_multA <= reg1 when sel_reg5="00" else reg2 when sel_reg2="01" else
 reg3 when sel_reg1="10" else reg4;

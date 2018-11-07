@@ -11,7 +11,7 @@ port(
 end mult;
 
 
-architecture Behavioral of adder is
+architecture Behavioral of mult is
 signal aux: signed(19 downto 0);
 
 begin

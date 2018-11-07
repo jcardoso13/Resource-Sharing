@@ -11,7 +11,7 @@ port(
 	rst: in std_logic
 );
 
-end entity;
+end control_unit;
 
 
 architecture Behavioral of control_unit is

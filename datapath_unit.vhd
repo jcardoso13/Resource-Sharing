@@ -36,9 +36,9 @@ architecture Behavioral of datapath_unit is
 
 component adder
 port(
-A: in signed(9 downto 0);
-B: in signed(9 downto 0);
-C: out signed(9 downto 0);
+A: in signed(20 downto 0);
+B: in signed(20 downto 0);
+C: out signed(20 downto 0);
 sel_add: in std_logic;
 trunc: in std_logic
 );
@@ -47,24 +47,24 @@ end component;
 
 component mult
 port(
-A: in signed(9 downto 0);
-B: in signed(9 downto 0);
-C: out signed(9 downto 0)
+A: in signed(20 downto 0);
+B: in signed(20 downto 0);
+C: out signed(20 downto 0)
 );
 end component;
 
 --SIGNALS
-signal reg1, reg2, reg3, reg4: signed(9 downto 0);
-signal mux_output_adder1A,mux_output_adder1B,mux_output_adder2A, mux_output_adder2B: signed(9 downto 0);
-signal rw_reg_mux1A,rw_reg_mux2A,rw_reg_mux1B,rw_reg_mux2B: signed(9 downto 0);
+signal reg1, reg2, reg3, reg4: signed(20 downto 0);
+signal mux_output_adder1A,mux_output_adder1B,mux_output_adder2A, mux_output_adder2B: signed(20 downto 0);
+signal rw_reg_mux1A,rw_reg_mux2A,rw_reg_mux1B,rw_reg_mux2B: signed(20 downto 0);
 signal input_mux_adder1A,input_mux_adder2A,input_mux_adder1B,
-input_mux_adder2B:signed(9 downto 0);
-signal input_mux: signed(9 downto 0);
-signal rw_reg_mux:signed(9 downto 0);
-signal seq_input :signed(9 downto 0);
-signal mux_output_multA,mux_output_multB:signed(9 downto 0);
-signal adder1_output,adder2_output,mult_output:signed(9 downto 0);
-signal mux_reg1,mux_reg2,mux_reg3,mux_reg4:signed(9 downto 0);
+input_mux_adder2B:signed(20 downto 0);
+signal input_mux: signed(20 downto 0);
+signal rw_reg_mux:signed(20 downto 0);
+signal seq_input :signed(20 downto 0);
+signal mux_output_multA,mux_output_multB:signed(20 downto 0);
+signal adder1_output,adder2_output,mult_output:signed(20 downto 0);
+signal mux_reg1,mux_reg2,mux_reg3,mux_reg4:signed(20 downto 0);
 
 begin
 

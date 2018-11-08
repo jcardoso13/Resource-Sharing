@@ -9,13 +9,14 @@ entity control_unit is
 port(
 	clk: in std_logic;
 	rst: in std_logic;
-	sel_reg1,sel_reg2,sel_reg3,sel_reg4,sel_reg5,
-	sel_reg6: out std_logic_vector(2 downto 0); 
+	init: in std_logic;
+	sel_reg1,sel_reg2,sel_reg3,sel_reg4:out std_logic_vector(2 downto 0);
+	sel_reg5,sel_reg6: out std_logic_vector(1 downto 0); 
 	sel_out1,sel_out2,sel_out3,
 	sel_out4: out std_logic_vector(1 downto 0);
 	load: out std_logic_vector(3 downto 0);
 	sel_add: out std_logic_vector(1 downto 0);
-	trunc: out std_logic_vector(1 downto 0);
+	trunc: out std_logic_vector(1 downto 0)
 	
 
 	
@@ -26,7 +27,7 @@ end control_unit;
 
 architecture Behavioral of control_unit is
 
-	type fsm_states is ( s_initial, s_cycle1, s_cycle2, s_cycle3, s_cycle4, s_cycle5, s_cycle6, s_end );
+	type fsm_states is ( s_initial, s_cycle1, s_cycle2, s_cycle3, s_cycle4, s_cycle5, s_cycle6, s_end);
 	signal currstate, nextstate: fsm_states;
 
 begin
@@ -41,7 +42,7 @@ begin
 		end if ;
 	end process;
 	
-state_comb: process (currstate)
+state_comb: process (currstate,init)
 
 begin  --  process
     nextstate <= currstate ;  
@@ -49,7 +50,9 @@ begin  --  process
     
 	case currstate is
 		when s_initial =>
+		if (init='1') then
 			nextstate <= s_cycle1;
+			end if;
 			
 		when s_cycle1 =>
 			nextstate <= s_cycle2;
@@ -57,13 +60,15 @@ begin  --  process
 			sel_reg2 <= "110"; --Q00
 			sel_reg3 <= "101"; --x
 			sel_reg4 <= "101"; --x0
-			sel_reg5 <= "XXX";
-			sel_reg6 <= "XXX";
+			sel_reg5 <= "XX";
+			sel_reg6 <= "XX";
 			sel_out1 <= "00"; --saves the result of adder1 in R1
 			sel_out2 <= "01"; --saves the result of adder2 in R2
+			sel_out3 <= "XX";
+			sel_out4 <= "XX";
 			load <= "0011";  -- enable of R1 and R2
 			sel_add  <= "00"; -- 2 subtractions
-			trunc <= "1X"; --truncates the result of the adder2 result
+			trunc <= "10"; --truncates the result of the adder2 result
 		
 		when s_cycle2 =>
 			nextstate <= s_cycle3;
@@ -71,14 +76,15 @@ begin  --  process
 			sel_reg2 <= "100"; --y0
 			sel_reg3 <= "111"; --Q11
 			sel_reg4 <= "111"; --Q01
-			sel_reg5 <= "X00"; --R1
-			sel_reg6 <= "X01"; --R2
+			sel_reg5 <= "00"; --R1
+			sel_reg6 <= "01"; --R2
 			sel_out1 <= "00" ; --saves the result of adder1
+			sel_out2 <= "XX";
 			sel_out3 <= "01" ; --saves the result of adder2
 			sel_out4 <= "10" ; --saves the result of mult
 			load <= "1101"; --enable of R3, R4 and R1
 			sel_add  <= "00"; --subtraction in adder1
-			trunc <= "X1"; -- truncate the result of the adder1 result 
+			trunc <= "01"; -- truncate the result of the adder1 result 
 			
 		
 		when s_cycle3 =>
@@ -87,13 +93,15 @@ begin  --  process
 			sel_reg2 <= "110"; --Q00 
 			sel_reg3 <= "XXX"; --not used
 			sel_reg4 <= "XXX"; --not used
-			sel_reg5 <= "X10"; --R3
-			sel_reg6 <= "X01"; --R2
+			sel_reg5 <= "10"; --R3
+			sel_reg6 <= "01"; --R2
+			sel_out1 <= "XX";
 			sel_out2 <= "00"; --saves the result of adder1 
+			sel_out3 <= "XX";
 			sel_out4 <= "10"; --saves the result of mult
 			load <= "1010"; 
 			sel_add  <= "X1"; --add in adder1
-			trunc <= "XX";
+			trunc <= "00";
 		
 		when s_cycle4 =>
 			nextstate <= s_cycle5;
@@ -103,11 +111,13 @@ begin  --  process
 			sel_reg4 <= "010"; -- R3
 			sel_reg5 <= "XXX"; --not used
 			sel_reg6 <= "XXX"; --not used
+			sel_out1 <= "XX";
+			sel_out2 <= "XX";
 			sel_out3 <= "00"; --saves the result of adder1 
 			sel_out4 <= "01"; --saves the result of adder2
 			load <= "1100"; 
 			sel_add  <= "01"; --add in adder1 and sub in adder 2
-			trunc <= "XX";
+			trunc <= "00";
 		
 		when s_cycle5 =>
 			nextstate <= s_cycle6;	
@@ -115,12 +125,15 @@ begin  --  process
 			sel_reg2 <= "XXX"; --not used
 			sel_reg3 <= "XXX"; --not used
 			sel_reg4 <= "XXX"; --not used
-			sel_reg5 <= "011"; --R4
-			sel_reg6 <= "000"; --R1
+			sel_reg5 <= "11"; --R4
+			sel_reg6 <= "00"; --R1
+			sel_out1 <= "XX";
+			sel_out2 <= "XX";
 			sel_out3 <= "10"; --saves the result of mult
+			sel_out4 <= "XX";
 			load <= "0100"; 
 			sel_add  <= "XX"; 
-			trunc <= "XX";
+			trunc <= "00";
 			
 		
 		when s_cycle6 =>
@@ -129,12 +142,15 @@ begin  --  process
 			sel_reg2 <= "001"; --R2
 			sel_reg3 <= "XXX"; --not used
 			sel_reg4 <= "XXX"; --not used
-			sel_reg5 <= "XXX"; --not used
-			sel_reg6 <= "XXX"; --not used
+			sel_reg5 <= "XX"; --not used
+			sel_reg6 <= "XX"; --not used
+			sel_out1 <= "XX";
+			sel_out2 <= "XX";
+			sel_out3 <= "XX";
 			sel_out4 <= "00"; --saves the result of adder1
 			load <= "1000"; 
 			sel_add  <= "X1"; --add in adder1
-			trunc <= "XX";
+			trunc <= "00";
 	
 			
 		when s_end =>
@@ -144,8 +160,8 @@ begin  --  process
 			sel_reg2 <= "XXX";
 			sel_reg3 <= "XXX";
 			sel_reg4 <= "XXX";
-			sel_reg5 <= "XXX";
-			sel_reg6 <= "XXX";
+			sel_reg5 <= "XX";
+			sel_reg6 <= "XX";
 			sel_out1 <= "XX";
 			sel_out2 <= "XX";
 			sel_out3 <= "XX";

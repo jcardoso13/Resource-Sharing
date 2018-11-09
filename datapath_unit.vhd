@@ -9,8 +9,8 @@ port(
 	seq: in std_logic;
 	
 	--Selects Operands for Functional Unit
-	sel_reg1,sel_reg2,sel_reg3,sel_reg4,sel_reg5,
-	sel_reg6: in std_logic_vector(2 downto 0); 
+	sel_reg1,sel_reg2,sel_reg3,sel_reg4: in std_logic_vector(2 downto 0);
+	sel_reg5,sel_reg6: in std_logic_vector(1 downto 0); 
 	
 	--Selects the Functional Unit that will write to each Register
 	sel_out1,sel_out2,sel_out3,
@@ -55,9 +55,8 @@ end component;
 
 --SIGNALS
 signal reg1, reg2, reg3, reg4: signed(9 downto 0);
-signal mux_output_adder1A,mux_output_adder1B,mux_output_adder2A,
-mux_output_adder2B: signed(9 downto 0);
-signal rw_reg_mux1A,rw_reg_mux2A,rw_reg_mux1B,rw_reg_mux2B: signal(9 downto 0);
+signal mux_output_adder1A,mux_output_adder1B,mux_output_adder2A, mux_output_adder2B: signed(9 downto 0);
+signal rw_reg_mux1A,rw_reg_mux2A,rw_reg_mux1B,rw_reg_mux2B: signed(9 downto 0);
 signal input_mux_adder1A,input_mux_adder2A,input_mux_adder1B,
 input_mux_adder2B:signed(9 downto 0);
 signal input_mux: signed(9 downto 0);

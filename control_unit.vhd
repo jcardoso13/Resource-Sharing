@@ -1,6 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-use IEEE.STD_LOGIC_ARITH.ALL;
+iuse IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 
@@ -16,7 +16,8 @@ port(
 	sel_out4: out std_logic_vector(1 downto 0);
 	load: out std_logic_vector(3 downto 0);
 	sel_add: out std_logic_vector(1 downto 0);
-	trunc: out std_logic_vector(1 downto 0)
+	trunc: out std_logic_vector(1 downto 0);
+	seq: out std_logic;
 	
 
 	
@@ -69,6 +70,7 @@ begin  --  process
 			load <= "0011";  -- enable of R1 and R2
 			sel_add  <= "00"; -- 2 subtractions
 			trunc <= "10"; --truncates the result of the adder2 result
+			seq <= '0';
 		
 		when s_cycle2 =>
 			nextstate <= s_cycle3;
@@ -85,6 +87,7 @@ begin  --  process
 			load <= "1101"; --enable of R3, R4 and R1
 			sel_add  <= "00"; --subtraction in adder1
 			trunc <= "01"; -- truncate the result of the adder1 result 
+			seq <= '0';
 			
 		
 		when s_cycle3 =>
@@ -102,7 +105,7 @@ begin  --  process
 			load <= "1010"; 
 			sel_add  <= "X1"; --add in adder1
 			trunc <= "00";
-		
+			seq <= '0';
 		when s_cycle4 =>
 			nextstate <= s_cycle5;
 			sel_reg1 <= "011"; --R4
@@ -115,9 +118,10 @@ begin  --  process
 			sel_out2 <= "XX";
 			sel_out3 <= "00"; --saves the result of adder1 
 			sel_out4 <= "01"; --saves the result of adder2
-			load <= "1100"; 
+			load <= "1000"; 
 			sel_add  <= "01"; --add in adder1 and sub in adder 2
 			trunc <= "00";
+			seq <= '1';
 		
 		when s_cycle5 =>
 			nextstate <= s_cycle6;	
@@ -134,6 +138,7 @@ begin  --  process
 			load <= "0100"; 
 			sel_add  <= "XX"; 
 			trunc <= "00";
+			seq <= '0';
 			
 		
 		when s_cycle6 =>
@@ -151,6 +156,7 @@ begin  --  process
 			load <= "1000"; 
 			sel_add  <= "X1"; --add in adder1
 			trunc <= "00";
+			seq <= '0';
 	
 			
 		when s_end =>
@@ -168,6 +174,7 @@ begin  --  process
 			sel_out4 <= "XX";
 			sel_add <= "XX";
 			trunc <= "XX";
+			seq <= '0';
 			
 	 end case;
  end process;

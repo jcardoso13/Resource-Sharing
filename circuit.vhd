@@ -32,7 +32,8 @@ port(
 	sel_out4: out std_logic_vector(1 downto 0);
 	load: out std_logic_vector(3 downto 0);
 	sel_add: out std_logic_vector(1 downto 0);
-	trunc: out std_logic_vector(1 downto 0)
+	trunc: out std_logic_vector(1 downto 0);
+	seq: out std_logic
 );
 end component;
 
@@ -82,7 +83,8 @@ inst_datapath: datapath_unit port map (
 	sel_out4 => sel_out4,
 	load => load,
 	sel_add => sel_add, 
-	trunc => trunc
+	trunc => trunc,
+	seq => seq
 );
 
 end Behavioral;

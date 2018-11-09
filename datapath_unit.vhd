@@ -25,7 +25,9 @@ port(
 	--Inputs
 	reg_input_x,reg_input_y,
 	reg_input_x0,reg_input_y0,reg_input_Q00,reg_input_Q01,
-	reg_input_Q10,reg_input_Q11: in signed(9 downto 0)
+	reg_input_Q10,reg_input_Q11: in signed(9 downto 0);
+	
+	output: out std_logic_vector(20 downto 0)
 );
 end datapath_unit;
 
@@ -101,7 +103,7 @@ input_mux_adder1A;
 rw_reg_mux1A <= reg1 when sel_reg1(1 downto 0)="00" else reg2 when sel_reg1(1 downto 0)="01" else
 reg3 when sel_reg1(1 downto 0)="10" else reg4;
 --Signal from 4 of the Input Reg
-input_mux_adder1A <= reg_input_y when sel_reg1(1 downto 0)="00" else reg_input_x when sel_reg1(1 downto 0)="01" else
+input_mux_adder1A(9 downto 0)<=reg_input_y when sel_reg1(1 downto 0)="00" else reg_input_x when sel_reg1(1 downto 0)="01" else
 reg_input_Q10 when sel_reg1(1 downto 0)="10" else reg_input_Q11;
 
 
@@ -111,7 +113,7 @@ mux_output_adder1B <= rw_reg_mux1B when sel_reg2(2)='0' else input_mux_adder1B;
 rw_reg_mux1B <= reg1 when sel_reg2(1 downto 0)="00" else reg2 when sel_reg2(1 downto 0)="01" else
 reg3 when sel_reg2(1 downto 0)="10" else reg4;
 --Signal from 4 of the Input Reg
-input_mux_adder1B <= reg_input_y0 when sel_reg2(1 downto 0)="00" else reg_input_x0 when sel_reg2(1 downto 0)="01" else
+input_mux_adder1B(9 downto 0)<= reg_input_y0 when sel_reg2(1 downto 0)="00" else reg_input_x0 when sel_reg2(1 downto 0)="01" else
 reg_input_Q00 when sel_reg2(1 downto 0)="10" else reg_input_Q01;
 
 --SIGNAL that enters Adder2Port A
@@ -121,9 +123,8 @@ input_mux_adder2A;
 rw_reg_mux2A <= reg1 when sel_reg3(1 downto 0)="00" else reg2 when sel_reg3(1 downto 0)="01" else
 reg3 when sel_reg3(1 downto 0)="10" else reg4;
 --Signal from 4 of the Input Reg
-input_mux_adder2A <= reg_input_y when sel_reg3(1 downto 0)="00" else reg_input_x when sel_reg3(1 downto 0)="01" else
+input_mux_adder2A(9 downto 0) <= reg_input_y when sel_reg3(1 downto 0)="00" else reg_input_x when sel_reg3(1 downto 0)="01" else
 reg_input_Q10 when sel_reg3(1 downto 0)="10" else reg_input_Q11;
-
 
 
 --SIGNAL that enters Adder2 Port B
@@ -132,7 +133,7 @@ mux_output_adder2B <= rw_reg_mux1B when sel_reg4(2)='0' else input_mux_adder1B;
 rw_reg_mux2B <= reg1 when sel_reg4(1 downto 0)="00" else reg2 when sel_reg4(1 downto 0)="01" else
 reg3 when sel_reg4(1 downto 0)="10" else reg4;
 --Signal from 4 of the Input Reg
-input_mux_adder2B <= reg_input_y0 when sel_reg4(1 downto 0)="00" else reg_input_x0 when sel_reg4(1 downto 0)="01" else
+input_mux_adder2B(9 downto 0)<= reg_input_y0 when sel_reg4(1 downto 0)="00" else reg_input_x0 when sel_reg4(1 downto 0)="01" else
 reg_input_Q00 when sel_reg4(1 downto 0)="10" else reg_input_Q01;
 
 
@@ -206,5 +207,7 @@ process (clk)
  end if;
  end if;
  end process;
+
+output<=std_logic_vector(reg4);
 
 end Behavioral;

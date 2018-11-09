@@ -1,5 +1,7 @@
 LIBRARY ieee;
 USE ieee.std_logic_1164.ALL;
+use IEEE.STD_LOGIC_1164.ALL;
+use IEEE.NUMERIC_STD.ALL;
  
  
 ENTITY circuit_tb IS
@@ -11,14 +13,23 @@ ARCHITECTURE behavior OF circuit_tb IS
  
     COMPONENT circuit
     port(
-    clk, rst: in std_logic
-    );
+clk, rst,init: in std_logic;
+signal reg_input_x,reg_input_y,
+	reg_input_x0,reg_input_y0,reg_input_Q00,reg_input_Q01,
+	reg_input_Q10,reg_input_Q11: in signed(9 downto 0);
+	output: out std_logic_vector(20 downto 0)
+);
     END COMPONENT;
     
 
    --Inputs
    signal clk : std_logic := '0';
    signal rst : std_logic := '0';
+   signal init: std_logic:= '0';
+   signal reg_input_x,reg_input_y,
+       reg_input_x0,reg_input_y0,reg_input_Q00,reg_input_Q01,
+       reg_input_Q10,reg_input_Q11: signed(9 downto 0) :=b"0000000000";
+   signal output:std_logic_vector(20 downto 0);
 
 
  	--Outputs
@@ -30,7 +41,17 @@ BEGIN
 	-- Instantiate the Unit Under Test (UUT)
    uut: circuit port map(
       clk => clk,
-      rst => rst
+      rst => rst,
+      init => init,
+      reg_input_x=>reg_input_x,
+          reg_input_y=>reg_input_y,
+          reg_input_x0=>reg_input_x0,
+          reg_input_y0=>reg_input_y0,
+          reg_input_Q00=>reg_input_Q00,
+          reg_input_Q01=>reg_input_Q01,
+          reg_input_Q10=>reg_input_Q10,
+          reg_input_Q11=>reg_input_Q11,
+          output => output
         );
 
    -- Clock definition
@@ -40,8 +61,9 @@ BEGIN
    stim_proc: process
    begin		
       -- hold reset state for 100 ns.
+      rst<='1';
       wait for 100 ns;	
-
+      rst<='0';
       wait for clk_period*10;
 
       -- insert stimulus here 

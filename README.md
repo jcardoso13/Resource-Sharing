@@ -4,12 +4,9 @@ Resource Sharing
 
 TO-DO
 
-1- create mult.vhd, add.vhd
+1- Create test bench
 
-2- Create Datapath Unit
-
-3- Create Control Unit-
-
-4- Register Sharing
-
+1.1 - Set clock = 1/Mult+Muxes
+1.2 - check if Negative inputs are correct in the pipeline (correctly extended)!
+1.3 -
 

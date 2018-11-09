@@ -1,0 +1,12 @@
+#-----------------------------------------------------------
+# Vivado v2018.2 (64-bit)
+# SW Build 2258646 on Thu Jun 14 20:02:38 MDT 2018
+# IP Build 2256618 on Thu Jun 14 22:10:49 MDT 2018
+# Start of session at: Wed Nov  7 15:32:26 2018
+# Process ID: 8746
+# Current directory: /home/jcardoso/Documents/p2-psd/project_2/project_2.runs/synth_1
+# Command line: vivado -log circuit_tb.vds -product Vivado -mode batch -messageDb vivado.pb -notrace -source circuit_tb.tcl
+# Log file: /home/jcardoso/Documents/p2-psd/project_2/project_2.runs/synth_1/circuit_tb.vds
+# Journal file: /home/jcardoso/Documents/p2-psd/project_2/project_2.runs/synth_1/vivado.jou
+#-----------------------------------------------------------
+source circuit_tb.tcl -notrace

@@ -1,6 +1,6 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
-iuse IEEE.STD_LOGIC_ARITH.ALL;
+use IEEE.STD_LOGIC_ARITH.ALL;
 use IEEE.STD_LOGIC_UNSIGNED.ALL;
 
 
@@ -17,7 +17,7 @@ port(
 	load: out std_logic_vector(3 downto 0);
 	sel_add: out std_logic_vector(1 downto 0);
 	trunc: out std_logic_vector(1 downto 0);
-	seq: out std_logic;
+	seq: out std_logic
 	
 
 	
@@ -54,6 +54,21 @@ begin  --  process
 		if (init='1') then
 			nextstate <= s_cycle1;
 			end if;
+	    load <="0000";
+        sel_reg1 <= "XXX";
+        sel_reg2 <= "XXX";
+        sel_reg3 <= "XXX";
+        sel_reg4 <= "XXX";
+        sel_reg5 <= "XX";
+        sel_reg6 <= "XX";
+        sel_out1 <= "XX";
+        sel_out2 <= "XX";
+        sel_out3 <= "XX";
+        sel_out4 <= "XX";
+        sel_add <= "XX";
+        trunc <= "XX";
+        seq <= '0';
+		
 			
 		when s_cycle1 =>
 			nextstate <= s_cycle2;
@@ -112,8 +127,8 @@ begin  --  process
 			sel_reg2 <= "111"; --Q01 
 			sel_reg3 <= "001"; -- R2
 			sel_reg4 <= "010"; -- R3
-			sel_reg5 <= "XXX"; --not used
-			sel_reg6 <= "XXX"; --not used
+			sel_reg5 <= "XX"; --not used
+			sel_reg6 <= "XX"; --not used
 			sel_out1 <= "XX";
 			sel_out2 <= "XX";
 			sel_out3 <= "00"; --saves the result of adder1 

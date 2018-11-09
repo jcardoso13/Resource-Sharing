@@ -19,6 +19,6 @@ signal aux: signed(20 downto 0);
 
 begin
 aux <= A+B when sel_add='0' else A-B;
-C <= (20 downto 16 => aux(20)) & aux(20 downto 4) when trunc='1' else aux;
+C <= (20 downto 16 => aux(20)) & aux(20 downto 5) when trunc='1' else aux;
 
 end Behavioral;

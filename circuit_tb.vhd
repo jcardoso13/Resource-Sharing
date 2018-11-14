@@ -44,14 +44,14 @@ BEGIN
       rst => rst,
       init => init,
       reg_input_x=>reg_input_x,
-          reg_input_y=>reg_input_y,
-          reg_input_x0=>reg_input_x0,
-          reg_input_y0=>reg_input_y0,
-          reg_input_Q00=>reg_input_Q00,
-          reg_input_Q01=>reg_input_Q01,
-          reg_input_Q10=>reg_input_Q10,
-          reg_input_Q11=>reg_input_Q11,
-          output => output
+      reg_input_y=>reg_input_y,
+      reg_input_x0=>reg_input_x0,
+      reg_input_y0=>reg_input_y0,
+      reg_input_Q00=>reg_input_Q00,
+      reg_input_Q01=>reg_input_Q01,
+      reg_input_Q10=>reg_input_Q10,
+      reg_input_Q11=>reg_input_Q11,
+      output => output
         );
 
    -- Clock definition
@@ -64,13 +64,19 @@ BEGIN
       rst<='1';
       wait for 100 ns;	
       rst<='0';
-      wait for clk_period*10;
-      init<='1';
-      wait for clk_period;
-      init<='0':
-
-      -- insert stimulus here 
-      -- note that input signals should never change at the positive edge of the clock
+	  reg_input_x <= X"010" after clk_period; --16
+	  reg_input_y <= X"010" after clk_period;
+	  reg_input_y0 <= X"000" after clk_period;
+	  reg_input_x0 <= X"000" after clk_period;
+	  reg_input_Q00 <= X"010" after clk_period;  -- 16
+	  reg_input_Q01 <= X"030" after clk_period; -- 64
+	  reg_input_Q10 <= X"010" after clk_period; --16
+	  reg_input_Q11 <= X"030" after clk_period; -- 64
+	  
+	  init <= '1' after clk_period*2;
+	  
+	  
+	  wait for 
 
       wait;
    end process;

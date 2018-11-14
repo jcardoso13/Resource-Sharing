@@ -14,7 +14,7 @@ ARCHITECTURE behavior OF circuit_tb IS
     COMPONENT circuit
     port(
 clk, rst,init: in std_logic;
-signal reg_input_x,reg_input_y,
+	reg_input_x,reg_input_y,
 	reg_input_x0,reg_input_y0,reg_input_Q00,reg_input_Q01,
 	reg_input_Q10,reg_input_Q11: in signed(9 downto 0);
 	output: out std_logic_vector(20 downto 0)
@@ -29,10 +29,10 @@ signal reg_input_x,reg_input_y,
    signal reg_input_x,reg_input_y,
        reg_input_x0,reg_input_y0,reg_input_Q00,reg_input_Q01,
        reg_input_Q10,reg_input_Q11: signed(9 downto 0) :=b"0000000000";
-   signal output:std_logic_vector(20 downto 0);
 
 
  	--Outputs
+ 	signal output:std_logic_vector(20 downto 0):= (others => '0');
    -- Clock period definitions
    constant clk_period : time := 10 ns;
  
@@ -65,6 +65,9 @@ BEGIN
       wait for 100 ns;	
       rst<='0';
       wait for clk_period*10;
+      init<='1';
+      wait for clk_period;
+      init<='0':
 
       -- insert stimulus here 
       -- note that input signals should never change at the positive edge of the clock

@@ -36,7 +36,8 @@ port(
 	load: out std_logic_vector(3 downto 0);
 	sel_add: out std_logic_vector(1 downto 0);
 	trunc: out std_logic;
-	seq: out std_logic
+	seq: out std_logic;
+	done: out std_logic
 );
 end component;
 
@@ -62,7 +63,8 @@ port(
      reg_input_x0, reg_input_y0: in signed(8 downto 0);
      reg_input_Q00, reg_input_Q01,
         reg_input_Q10,reg_input_Q11: in signed(9 downto 0);
-    output: out std_logic_vector(9 downto 0)
+    output: out std_logic_vector(9 downto 0);
+    done: in std_logic
 );
 end component;
 
@@ -73,7 +75,7 @@ signal load: std_logic_vector(3 downto 0);
 signal seq: std_logic;
 signal sel_add:std_logic_vector(1 downto 0);
 signal trunc:std_logic;
-
+signal done: std_logic;
 
 begin
 
@@ -94,7 +96,8 @@ inst_control: control_unit port map (
 	load => load,
 	sel_add => sel_add, 
 	trunc => trunc,
-	seq => seq
+	seq => seq,
+	done => done
 );
 
 inst_datapath: datapath_unit port map (
@@ -122,7 +125,8 @@ inst_datapath: datapath_unit port map (
     reg_input_Q01=>reg_input_Q01,
     reg_input_Q10=>reg_input_Q10,
     reg_input_Q11=>reg_input_Q11,
-    output => output
+    output => output,
+    done => done
 );
 
 end Behavioral;

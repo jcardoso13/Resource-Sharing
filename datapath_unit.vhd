@@ -30,7 +30,9 @@ port(
 	reg_input_Q00,reg_input_Q01,
 	reg_input_Q10,reg_input_Q11: in signed(9 downto 0);
 	
-	output: out std_logic_vector(9 downto 0)
+	output: out std_logic_vector(9 downto 0);
+	
+	done: in std_logic
 );
 end datapath_unit;
 
@@ -214,6 +216,15 @@ process (clk)
  end if;
  end process;
 
-output<=std_logic_vector(reg4);
+process (clk)
+begin
+ if clk'event and clk='1' then
+ if rst='1' then
+ output <= (others => '0');
+ elsif done='1' then
+ output <= std_logic_vector(reg4);
+ end if;
+ end if;
+ end process;
 
 end Behavioral;

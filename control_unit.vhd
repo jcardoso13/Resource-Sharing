@@ -17,10 +17,9 @@ port(
 	load: out std_logic_vector(3 downto 0);
 	sel_add: out std_logic_vector(1 downto 0);
 	trunc: out std_logic;
-	seq: out std_logic
-	
+	seq: out std_logic;
+	done: out std_logic
 
-	
 );
 
 end control_unit;
@@ -28,7 +27,7 @@ end control_unit;
 
 architecture Behavioral of control_unit is
 
-	type fsm_states is ( s_initial, s_cycle1, s_cycle2, s_cycle3, s_cycle4, s_cycle5, s_cycle6, s_end);
+	type fsm_states is ( s_initial, s_cycle1, s_cycle2, s_cycle3, s_cycle4, s_cycle5, s_cycle6);
 	signal currstate, nextstate: fsm_states;
 
 begin
@@ -53,6 +52,9 @@ begin  --  process
 		when s_initial =>
 		if (init='1') then
 			nextstate <= s_cycle1;
+			done <= '0';
+		elsif (init='0') then
+			done <= '1';
 			end if;
 	    load <="0000";
         sel_reg1 <= "XXX";
@@ -86,6 +88,7 @@ begin  --  process
 			sel_add  <= "11"; -- 2 subtractions
 			trunc <= '0'; --truncates the result of the adder2 result
 			seq <= '0';
+			done <= '0';
 		
 		when s_cycle2 =>
 			nextstate <= s_cycle3;
@@ -103,6 +106,7 @@ begin  --  process
 			sel_add  <= "11"; --subtraction in adder1
 			trunc <= '1'; -- truncate the result of the adder1 result 
 			seq <= '0';
+			done <= '0';
 			
 		
 		when s_cycle3 =>
@@ -120,6 +124,7 @@ begin  --  process
 			load <= "1010"; 
 			sel_add  <= "X0"; --add in adder1
 			trunc <= '1';
+			done <= '0';
 			seq <= '0';
 		when s_cycle4 =>
 			nextstate <= s_cycle5;
@@ -152,12 +157,13 @@ begin  --  process
 			sel_out4 <= "XX";
 			load <= "0100"; 
 			sel_add  <= "XX"; 
+			done <= '0';
 			trunc <= '1';
 			seq <= '0';
 			
 		
 		when s_cycle6 =>
-			nextstate <= s_end;
+			nextstate <= s_initial; -- s_end
 			sel_reg1 <= "010"; --R3
 			sel_reg2 <= "001"; --R2
 			sel_reg3 <= "XXX"; --not used
@@ -171,25 +177,26 @@ begin  --  process
 			load <= "1000"; 
 			sel_add  <= "X0"; --add in adder1
 			trunc <= '0';
+			done <= '0';
 			seq <= '0';
 	
 			
-		when s_end =>
-			nextstate <= s_initial;
-			load <="0000";
-			sel_reg1 <= "XXX";
-			sel_reg2 <= "XXX";
-			sel_reg3 <= "XXX";
-			sel_reg4 <= "XXX";
-			sel_reg5 <= "XX";
-			sel_reg6 <= "XX";
-			sel_out1 <= "XX";
-			sel_out2 <= "XX";
-			sel_out3 <= "XX";
-			sel_out4 <= "XX";
-			sel_add <= "XX";
-			trunc <= '0';
-			seq <= '0';
+		--when s_end =>
+			--nextstate <= s_initial;
+			--load <="0000";
+			--sel_reg1 <= "XXX";
+			--sel_reg2 <= "XXX";
+			--sel_reg3 <= "XXX";
+			--sel_reg4 <= "XXX";
+			--sel_reg5 <= "XX";
+			--sel_reg6 <= "XX";
+			--sel_out1 <= "XX";
+			--sel_out2 <= "XX";
+			--sel_out3 <= "XX";
+			--sel_out4 <= "XX";
+			--sel_add <= "XX";
+			--trunc <= '0';
+			--seq <= '0';
 			
 	 end case;
  end process;

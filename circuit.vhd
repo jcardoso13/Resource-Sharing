@@ -7,9 +7,11 @@ entity circuit is
 port(
 clk, rst,init: in std_logic;
 reg_input_x,reg_input_y,
-	reg_input_x0,reg_input_y0,reg_input_Q00,reg_input_Q01,
+	reg_input_x0,reg_input_y0: in signed(8 downto 0);
+	
+	reg_input_Q00,reg_input_Q01,
 	reg_input_Q10,reg_input_Q11: in signed(9 downto 0);
-	output: out std_logic_vector(20 downto 0)
+	output: out std_logic_vector(9 downto 0)
 );
 end circuit;
 
@@ -33,7 +35,7 @@ port(
 	sel_out4: out std_logic_vector(1 downto 0);
 	load: out std_logic_vector(3 downto 0);
 	sel_add: out std_logic_vector(1 downto 0);
-	trunc: out std_logic_vector(1 downto 0);
+	trunc: out std_logic;
 	seq: out std_logic
 );
 end component;
@@ -55,11 +57,12 @@ port(
 	load: in std_logic_vector(3 downto 0);
 	seq: in std_logic;
 	sel_add: in std_logic_vector(1 downto 0);
-	trunc: in std_logic_vector(1 downto 0);
+	trunc: in std_logic;
 	reg_input_x, reg_input_y,
-     reg_input_x0, reg_input_y0, reg_input_Q00, reg_input_Q01,
+     reg_input_x0, reg_input_y0: in signed(8 downto 0);
+     reg_input_Q00, reg_input_Q01,
         reg_input_Q10,reg_input_Q11: in signed(9 downto 0);
-    output: out std_logic_vector(20 downto 0)
+    output: out std_logic_vector(9 downto 0)
 );
 end component;
 
@@ -69,7 +72,7 @@ signal sel_out1,sel_out2,sel_out3,sel_out4:std_logic_vector(1 downto 0);
 signal load: std_logic_vector(3 downto 0);
 signal seq: std_logic;
 signal sel_add:std_logic_vector(1 downto 0);
-signal trunc:std_logic_vector(1 downto 0);
+signal trunc:std_logic;
 
 
 begin

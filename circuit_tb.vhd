@@ -15,9 +15,11 @@ ARCHITECTURE behavior OF circuit_tb IS
     port(
 clk, rst,init: in std_logic;
 	reg_input_x,reg_input_y,
-	reg_input_x0,reg_input_y0,reg_input_Q00,reg_input_Q01,
+	reg_input_x0,reg_input_y0: in signed(8 downto 0);
+	
+	reg_input_Q00,reg_input_Q01,
 	reg_input_Q10,reg_input_Q11: in signed(9 downto 0);
-	output: out std_logic_vector(20 downto 0)
+	output: out std_logic_vector(9 downto 0)
 );
     END COMPONENT;
     
@@ -27,12 +29,14 @@ clk, rst,init: in std_logic;
    signal rst : std_logic := '0';
    signal init: std_logic:= '0';
    signal reg_input_x,reg_input_y,
-       reg_input_x0,reg_input_y0,reg_input_Q00,reg_input_Q01,
+       reg_input_x0,reg_input_y0: signed(8 downto 0) :=b"000000000";
+       
+   signal  reg_input_Q00,reg_input_Q01,
        reg_input_Q10,reg_input_Q11: signed(9 downto 0) :=b"0000000000";
 
 
  	--Outputs
- 	signal output:std_logic_vector(20 downto 0):= (others => '0');
+ 	signal output:std_logic_vector(9 downto 0):= (others => '0');
    -- Clock period definitions
    constant clk_period : time := 10 ns;
  
@@ -64,19 +68,20 @@ BEGIN
       rst<='1';
       wait for 100 ns;	
       rst<='0';
-	  reg_input_x <= X"010" after clk_period; --16
-	  reg_input_y <= X"010" after clk_period;
-	  reg_input_y0 <= X"000" after clk_period;
-	  reg_input_x0 <= X"000" after clk_period;
-	  reg_input_Q00 <= X"010" after clk_period;  -- 16
-	  reg_input_Q01 <= X"030" after clk_period; -- 64
-	  reg_input_Q10 <= X"010" after clk_period; --16
-	  reg_input_Q11 <= X"030" after clk_period; -- 64
-	  
-	  init <= '1' after clk_period*2;
+	  reg_input_x <= b"000010000" after clk_period; --16
+	  reg_input_y <= b"000010000" after clk_period; --16
+	  reg_input_y0 <= b"000000000" after clk_period; -- 0
+	  reg_input_x0 <= b"000000000" after clk_period; -- 0
+	  reg_input_Q00 <= b"0000010000" after clk_period; --16
+	  reg_input_Q01 <= b"0000010000" after clk_period; --16
+	  reg_input_Q10 <= b"0000100000" after clk_period; --32
+	  reg_input_Q11 <= b"0001000000" after clk_period; --64
 	  
 	  
-	  wait for 
+	  init <= '1' after clk_period,
+	          '0' after clk_period*2;
+	  
+	 
 
       wait;
    end process;

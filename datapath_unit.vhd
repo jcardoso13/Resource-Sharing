@@ -21,13 +21,16 @@ port(
 	--Selects ADD(0) or SUB(1)
 	sel_add: in std_logic_vector(1 downto 0);
 	--Truncates the result of the sum/sub if =1 
-	trunc: in std_logic_vector(1 downto 0);
+	--trunc: in std_logic_vector(1 downto 0);
+	trunc: in std_logic;
 	--Inputs
 	reg_input_x,reg_input_y,
-	reg_input_x0,reg_input_y0,reg_input_Q00,reg_input_Q01,
+	reg_input_x0,reg_input_y0 : in signed(8 downto 0);
+	
+	reg_input_Q00,reg_input_Q01,
 	reg_input_Q10,reg_input_Q11: in signed(9 downto 0);
 	
-	output: out std_logic_vector(20 downto 0)
+	output: out std_logic_vector(9 downto 0)
 );
 end datapath_unit;
 
@@ -38,35 +41,36 @@ architecture Behavioral of datapath_unit is
 
 component adder
 port(
-A: in signed(20 downto 0);
-B: in signed(20 downto 0);
-C: out signed(20 downto 0);
-sel_add: in std_logic;
-trunc: in std_logic
+A: in signed(9 downto 0);
+B: in signed(9 downto 0);
+C: out signed(9 downto 0);
+sel_add: in std_logic
+--trunc: in std_logic
 );
 end component;
 
 
 component mult
 port(
-A: in signed(20 downto 0);
-B: in signed(20 downto 0);
-C: out signed(20 downto 0)
+A: in signed(9 downto 0);
+B: in signed(9 downto 0);
+C: out signed(9 downto 0);
+trunc: in std_logic
 );
 end component;
 
 --SIGNALS
-signal reg1, reg2, reg3, reg4: signed(20 downto 0);
-signal mux_output_adder1A,mux_output_adder1B,mux_output_adder2A, mux_output_adder2B: signed(20 downto 0);
-signal rw_reg_mux1A,rw_reg_mux2A,rw_reg_mux1B,rw_reg_mux2B: signed(20 downto 0);
+signal reg1, reg2, reg3, reg4: signed(9 downto 0);
+signal mux_output_adder1A,mux_output_adder1B,mux_output_adder2A, mux_output_adder2B: signed(9 downto 0);
+signal rw_reg_mux1A,rw_reg_mux2A,rw_reg_mux1B,rw_reg_mux2B: signed(9 downto 0);
 signal input_mux_adder1A,input_mux_adder2A,input_mux_adder1B,
-input_mux_adder2B:signed(20 downto 0);
-signal input_mux: signed(20 downto 0);
-signal rw_reg_mux:signed(20 downto 0);
-signal seq_input :signed(20 downto 0);
-signal mux_output_multA,mux_output_multB:signed(20 downto 0);
-signal adder1_output,adder2_output,mult_output:signed(20 downto 0);
-signal mux_reg1,mux_reg2,mux_reg3,mux_reg4:signed(20 downto 0);
+input_mux_adder2B:signed(9 downto 0);
+signal input_mux: signed(9 downto 0);
+signal rw_reg_mux:signed(9 downto 0);
+signal seq_input :signed(9 downto 0);
+signal mux_output_multA,mux_output_multB:signed(9 downto 0);
+signal adder1_output,adder2_output,mult_output:signed(9 downto 0);
+signal mux_reg1,mux_reg2,mux_reg3,mux_reg4:signed(9 downto 0);
 
 begin
 
@@ -75,22 +79,24 @@ inst_adder1: adder port map(
 A => mux_output_adder1A,
 B => mux_output_adder1B,
 C => adder1_output,
-sel_add => sel_add(0),
-trunc => trunc(0)
+sel_add => sel_add(0)
+--trunc => trunc(0)
 );
 
 inst_adder2: adder port map(
 A => seq_input,
 B => mux_output_adder2B,
 C => adder2_output,
-sel_add => sel_add(1),
-trunc => trunc(1)
+sel_add => sel_add(1)
+--trunc => trunc(1)
 );
 
 inst_mult: mult port map(
 A => mux_output_multA,
 B => mux_output_multB,
-C => mult_output);
+C => mult_output,
+trunc => trunc
+);
 
 
 seq_input<= mux_output_adder2A when seq='0' else adder1_output;
@@ -103,7 +109,7 @@ input_mux_adder1A;
 rw_reg_mux1A <= reg1 when sel_reg1(1 downto 0)="00" else reg2 when sel_reg1(1 downto 0)="01" else
 reg3 when sel_reg1(1 downto 0)="10" else reg4;
 --Signal from 4 of the Input Reg
-input_mux_adder1A(9 downto 0)<=reg_input_y when sel_reg1(1 downto 0)="00" else reg_input_x when sel_reg1(1 downto 0)="01" else
+input_mux_adder1A(9 downto 0)<=reg_input_y(8) & reg_input_y when sel_reg1(1 downto 0)="00" else reg_input_x(8) & reg_input_x when sel_reg1(1 downto 0)="01" else
 reg_input_Q10 when sel_reg1(1 downto 0)="10" else reg_input_Q11;
 
 
@@ -113,7 +119,7 @@ mux_output_adder1B <= rw_reg_mux1B when sel_reg2(2)='0' else input_mux_adder1B;
 rw_reg_mux1B <= reg1 when sel_reg2(1 downto 0)="00" else reg2 when sel_reg2(1 downto 0)="01" else
 reg3 when sel_reg2(1 downto 0)="10" else reg4;
 --Signal from 4 of the Input Reg
-input_mux_adder1B(9 downto 0)<= reg_input_y0 when sel_reg2(1 downto 0)="00" else reg_input_x0 when sel_reg2(1 downto 0)="01" else
+input_mux_adder1B(9 downto 0)<= reg_input_y0(8) & reg_input_y0 when sel_reg2(1 downto 0)="00" else reg_input_x0(8) & reg_input_x0 when sel_reg2(1 downto 0)="01" else
 reg_input_Q00 when sel_reg2(1 downto 0)="10" else reg_input_Q01;
 
 --SIGNAL that enters Adder2Port A
@@ -123,17 +129,17 @@ input_mux_adder2A;
 rw_reg_mux2A <= reg1 when sel_reg3(1 downto 0)="00" else reg2 when sel_reg3(1 downto 0)="01" else
 reg3 when sel_reg3(1 downto 0)="10" else reg4;
 --Signal from 4 of the Input Reg
-input_mux_adder2A(9 downto 0) <= reg_input_y when sel_reg3(1 downto 0)="00" else reg_input_x when sel_reg3(1 downto 0)="01" else
+input_mux_adder2A(9 downto 0) <= reg_input_y(8) & reg_input_y when sel_reg3(1 downto 0)="00" else reg_input_x(8) & reg_input_x when sel_reg3(1 downto 0)="01" else
 reg_input_Q10 when sel_reg3(1 downto 0)="10" else reg_input_Q11;
 
 
 --SIGNAL that enters Adder2 Port B
-mux_output_adder2B <= rw_reg_mux1B when sel_reg4(2)='0' else input_mux_adder1B;
+mux_output_adder2B <= rw_reg_mux2B when sel_reg4(2)='0' else input_mux_adder2B;
 --Signal from the 4 r/w Reg
 rw_reg_mux2B <= reg1 when sel_reg4(1 downto 0)="00" else reg2 when sel_reg4(1 downto 0)="01" else
 reg3 when sel_reg4(1 downto 0)="10" else reg4;
 --Signal from 4 of the Input Reg
-input_mux_adder2B(9 downto 0)<= reg_input_y0 when sel_reg4(1 downto 0)="00" else reg_input_x0 when sel_reg4(1 downto 0)="01" else
+input_mux_adder2B(9 downto 0)<= reg_input_y0(8) & reg_input_y0 when sel_reg4(1 downto 0)="00" else reg_input_x0(8) & reg_input_x0 when sel_reg4(1 downto 0)="01" else
 reg_input_Q00 when sel_reg4(1 downto 0)="10" else reg_input_Q01;
 
 

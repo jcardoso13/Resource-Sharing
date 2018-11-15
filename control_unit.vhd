@@ -16,7 +16,7 @@ port(
 	sel_out4: out std_logic_vector(1 downto 0);
 	load: out std_logic_vector(3 downto 0);
 	sel_add: out std_logic_vector(1 downto 0);
-	trunc: out std_logic_vector(1 downto 0);
+	trunc: out std_logic;
 	seq: out std_logic
 	
 
@@ -66,7 +66,7 @@ begin  --  process
         sel_out3 <= "XX";
         sel_out4 <= "XX";
         sel_add <= "XX";
-        trunc <= "XX";
+        trunc <= '0';
         seq <= '0';
 		
 			
@@ -83,8 +83,8 @@ begin  --  process
 			sel_out3 <= "XX";
 			sel_out4 <= "XX";
 			load <= "0011";  -- enable of R1 and R2
-			sel_add  <= "00"; -- 2 subtractions
-			trunc <= "10"; --truncates the result of the adder2 result
+			sel_add  <= "11"; -- 2 subtractions
+			trunc <= '0'; --truncates the result of the adder2 result
 			seq <= '0';
 		
 		when s_cycle2 =>
@@ -100,8 +100,8 @@ begin  --  process
 			sel_out3 <= "01" ; --saves the result of adder2
 			sel_out4 <= "10" ; --saves the result of mult
 			load <= "1101"; --enable of R3, R4 and R1
-			sel_add  <= "00"; --subtraction in adder1
-			trunc <= "01"; -- truncate the result of the adder1 result 
+			sel_add  <= "11"; --subtraction in adder1
+			trunc <= '1'; -- truncate the result of the adder1 result 
 			seq <= '0';
 			
 		
@@ -118,24 +118,24 @@ begin  --  process
 			sel_out3 <= "XX";
 			sel_out4 <= "10"; --saves the result of mult
 			load <= "1010"; 
-			sel_add  <= "X1"; --add in adder1
-			trunc <= "00";
+			sel_add  <= "X0"; --add in adder1
+			trunc <= '1';
 			seq <= '0';
 		when s_cycle4 =>
 			nextstate <= s_cycle5;
 			sel_reg1 <= "011"; --R4
 			sel_reg2 <= "111"; --Q01 
-			sel_reg3 <= "001"; -- R2
-			sel_reg4 <= "010"; -- R3
+			sel_reg3 <= "010"; -- R2
+			sel_reg4 <= "001"; -- R3
 			sel_reg5 <= "XX"; --not used
 			sel_reg6 <= "XX"; --not used
 			sel_out1 <= "XX";
 			sel_out2 <= "XX";
 			sel_out3 <= "00"; --saves the result of adder1 
 			sel_out4 <= "01"; --saves the result of adder2
-			load <= "1000"; 
-			sel_add  <= "01"; --add in adder1 and sub in adder 2
-			trunc <= "00";
+			load <= "1100"; 
+			sel_add  <= "10"; --add in adder1 and sub in adder 2
+			trunc <= '0';
 			seq <= '1';
 		
 		when s_cycle5 =>
@@ -152,7 +152,7 @@ begin  --  process
 			sel_out4 <= "XX";
 			load <= "0100"; 
 			sel_add  <= "XX"; 
-			trunc <= "00";
+			trunc <= '1';
 			seq <= '0';
 			
 		
@@ -169,8 +169,8 @@ begin  --  process
 			sel_out3 <= "XX";
 			sel_out4 <= "00"; --saves the result of adder1
 			load <= "1000"; 
-			sel_add  <= "X1"; --add in adder1
-			trunc <= "00";
+			sel_add  <= "X0"; --add in adder1
+			trunc <= '0';
 			seq <= '0';
 	
 			
@@ -188,7 +188,7 @@ begin  --  process
 			sel_out3 <= "XX";
 			sel_out4 <= "XX";
 			sel_add <= "XX";
-			trunc <= "XX";
+			trunc <= '0';
 			seq <= '0';
 			
 	 end case;

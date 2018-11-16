@@ -9,16 +9,16 @@ entity control_unit is
 port(
 	clk: in std_logic;
 	rst: in std_logic;
-	init: in std_logic;
 	sel_reg1,sel_reg2,sel_reg3,sel_reg4:out std_logic_vector(2 downto 0);
 	sel_reg5,sel_reg6: out std_logic_vector(1 downto 0); 
 	sel_out1,sel_out2,sel_out3,
 	sel_out4: out std_logic_vector(1 downto 0);
 	load: out std_logic_vector(3 downto 0);
 	sel_add: out std_logic_vector(1 downto 0);
+	done: out std_logic;
 	trunc: out std_logic;
-	seq: out std_logic;
-	done: out std_logic
+	seq: out std_logic
+	
 
 );
 
@@ -27,8 +27,9 @@ end control_unit;
 
 architecture Behavioral of control_unit is
 
-	type fsm_states is ( s_initial, s_cycle1, s_cycle2, s_cycle3, s_cycle4, s_cycle5, s_cycle6);
+	type fsm_states is ( s_initial, s_cycle1, s_cycle2, s_cycle3, s_cycle4, s_cycle5, s_cycle6,s_end);
 	signal currstate, nextstate: fsm_states;
+	
 
 begin
 	state_reg: process (clk)
@@ -42,7 +43,7 @@ begin
 		end if ;
 	end process;
 	
-state_comb: process (currstate,init)
+state_comb: process (currstate,rst)
 
 begin  --  process
     nextstate <= currstate ;  
@@ -50,12 +51,8 @@ begin  --  process
     
 	case currstate is
 		when s_initial =>
-		if (init='1') then
-			nextstate <= s_cycle1;
-			done <= '0';
-		elsif (init='0') then
-			done <= '1';
-			end if;
+		nextstate <= s_cycle1;
+
 	    load <="0000";
         sel_reg1 <= "XXX";
         sel_reg2 <= "XXX";
@@ -70,6 +67,7 @@ begin  --  process
         sel_add <= "XX";
         trunc <= '0';
         seq <= '0';
+        done <= '0';
 		
 			
 		when s_cycle1 =>
@@ -142,6 +140,7 @@ begin  --  process
 			sel_add  <= "10"; --add in adder1 and sub in adder 2
 			trunc <= '0';
 			seq <= '1';
+			done <= '0';
 		
 		when s_cycle5 =>
 			nextstate <= s_cycle6;	
@@ -163,7 +162,7 @@ begin  --  process
 			
 		
 		when s_cycle6 =>
-			nextstate <= s_initial; -- s_end
+			nextstate <= s_end;
 			sel_reg1 <= "010"; --R3
 			sel_reg2 <= "001"; --R2
 			sel_reg3 <= "XXX"; --not used
@@ -177,27 +176,28 @@ begin  --  process
 			load <= "1000"; 
 			sel_add  <= "X0"; --add in adder1
 			trunc <= '0';
-			done <= '0';
 			seq <= '0';
+			done <= '0'; 
+
 	
 			
-		--when s_end =>
-			--nextstate <= s_initial;
-			--load <="0000";
-			--sel_reg1 <= "XXX";
-			--sel_reg2 <= "XXX";
-			--sel_reg3 <= "XXX";
-			--sel_reg4 <= "XXX";
-			--sel_reg5 <= "XX";
-			--sel_reg6 <= "XX";
-			--sel_out1 <= "XX";
-			--sel_out2 <= "XX";
-			--sel_out3 <= "XX";
-			--sel_out4 <= "XX";
-			--sel_add <= "XX";
-			--trunc <= '0';
-			--seq <= '0';
-			
+		when s_end =>
+			nextstate <= s_initial;
+			load <="0000";
+			sel_reg1 <= "XXX";
+			sel_reg2 <= "XXX";
+			sel_reg3 <= "XXX";
+			sel_reg4 <= "XXX";
+			sel_reg5 <= "XX";
+			sel_reg6 <= "XX";
+			sel_out1 <= "XX";
+			sel_out2 <= "XX";
+			sel_out3 <= "XX";
+			sel_out4 <= "XX";
+			sel_add <= "XX";
+			trunc <= '0';
+			seq <= '0';
+			done <= '1';
 	 end case;
  end process;
 end Behavioral;

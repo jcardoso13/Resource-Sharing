@@ -5,7 +5,7 @@ use IEEE.NUMERIC_STD.ALL;
 entity circuit is
 
 port(
-clk, rst,init: in std_logic;
+clk, rst: in std_logic;
 reg_input_x,reg_input_y,
 	reg_input_x0,reg_input_y0: in signed(8 downto 0);
 	
@@ -22,7 +22,6 @@ component control_unit
 port(
 	clk: in std_logic;
 	rst: in std_logic; 
-	init: in std_logic;
 	sel_reg1: out std_logic_vector(2 downto 0);
 	sel_reg2: out std_logic_vector(2 downto 0);
 	sel_reg3: out std_logic_vector(2 downto 0);
@@ -82,7 +81,6 @@ begin
 inst_control: control_unit port map (
 	clk => clk,
 	rst => rst,
-	init => init,
 	sel_reg1 => sel_reg1,
 	sel_reg2 => sel_reg2,
 	sel_reg3 => sel_reg3,

@@ -4,9 +4,9 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity adder is
 port(
-	A: in signed(9 downto 0);
-	B: in signed(9 downto 0);
-	C: out signed(9 downto 0);
+	A: in signed(10 downto 0);
+	B: in signed(10 downto 0);
+	C: out signed(10 downto 0);
 	sel_add: in std_logic
 	--trunc: in std_logic
 	);

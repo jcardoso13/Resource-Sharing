@@ -51,24 +51,22 @@ begin  --  process
     
 	case currstate is
 		when s_initial =>
-		nextstate <= s_cycle1;
-
-	    load <="0000";
-        sel_reg1 <= "XXX";
-        sel_reg2 <= "XXX";
-        sel_reg3 <= "XXX";
-        sel_reg4 <= "XXX";
-        sel_reg5 <= "XX";
-        sel_reg6 <= "XX";
-        sel_out1 <= "XX";
-        sel_out2 <= "XX";
-        sel_out3 <= "XX";
-        sel_out4 <= "XX";
-        sel_add <= "XX";
-        trunc <= '0';
-        seq <= '0';
-        done <= '0';
-		
+			nextstate <= s_cycle1;
+	    		load <="0000";
+        		sel_reg1 <= "XXX";
+        		sel_reg2 <= "XXX";
+        		sel_reg3 <= "XXX";
+        		sel_reg4 <= "XXX";
+		        sel_reg5 <= "XX";
+		        sel_reg6 <= "XX";
+        		sel_out1 <= "XX";
+       			sel_out2 <= "XX";
+        		sel_out3 <= "XX";
+        		sel_out4 <= "XX";
+        		sel_add <= "XX";
+        		trunc <= '0';
+        		seq <= '0';
+        		done <= '0';
 			
 		when s_cycle1 =>
 			nextstate <= s_cycle2;
@@ -84,7 +82,7 @@ begin  --  process
 			sel_out4 <= "XX";
 			load <= "0011";  -- enable of R1 and R2
 			sel_add  <= "11"; -- 2 subtractions
-			trunc <= '0'; --truncates the result of the adder2 result
+			trunc <= '0'; 
 			seq <= '0';
 			done <= '0';
 		
@@ -102,7 +100,7 @@ begin  --  process
 			sel_out4 <= "10" ; --saves the result of mult
 			load <= "1101"; --enable of R3, R4 and R1
 			sel_add  <= "11"; --subtraction in adder1
-			trunc <= '1'; -- truncate the result of the adder1 result 
+			trunc <= '1'; -- truncate the result of mult 
 			seq <= '0';
 			done <= '0';
 			
@@ -121,7 +119,7 @@ begin  --  process
 			sel_out4 <= "10"; --saves the result of mult
 			load <= "1010"; 
 			sel_add  <= "X0"; --add in adder1
-			trunc <= '1';
+			trunc <= '1'; -- truncates the mult result
 			done <= '0';
 			seq <= '0';
 		when s_cycle4 =>
@@ -152,12 +150,12 @@ begin  --  process
 			sel_reg6 <= "00"; --R1
 			sel_out1 <= "XX";
 			sel_out2 <= "XX";
-			sel_out3 <= "10"; --saves the result of mult
+			sel_out3 <= "10"; --saves the result of the mult
 			sel_out4 <= "XX";
 			load <= "0100"; 
 			sel_add  <= "XX"; 
 			done <= '0';
-			trunc <= '1';
+			trunc <= '1'; -- truncates the mult result
 			seq <= '0';
 			
 		
@@ -179,7 +177,6 @@ begin  --  process
 			seq <= '0';
 			done <= '0'; 
 
-	
 			
 		when s_end =>
 			nextstate <= s_initial;
